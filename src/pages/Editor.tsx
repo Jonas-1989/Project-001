@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
+import * as uuid from "uuid";
 import Navbar from "@/components/Navbar";
 import CVEditor from "@/components/CVEditor";
 import CVPreview from "@/components/CVPreview";
@@ -40,7 +40,7 @@ const Editor = () => {
     },
     experiences: [
       {
-        id: uuidv4(),
+        id: uuid.v4(),
         company: "Tech Solutions Inc.",
         position: "Senior Developer",
         startDate: "01/2020",
@@ -51,7 +51,7 @@ const Editor = () => {
     ],
     education: [
       {
-        id: uuidv4(),
+        id: uuid.v4(),
         institution: "University of Paris",
         degree: "Master's",
         field: "Computer Science",
@@ -62,34 +62,34 @@ const Editor = () => {
     ],
     languages: [
       {
-        id: uuidv4(),
+        id: uuid.v4(),
         name: "English",
         level: 5,
       },
       {
-        id: uuidv4(),
+        id: uuid.v4(),
         name: "French",
         level: 4,
       },
     ],
     skills: [
       {
-        id: uuidv4(),
+        id: uuid.v4(),
         name: "JavaScript",
         level: 5,
       },
       {
-        id: uuidv4(),
+        id: uuid.v4(),
         name: "React",
         level: 4,
       },
       {
-        id: uuidv4(),
+        id: uuid.v4(),
         name: "Node.js",
         level: 4,
       },
       {
-        id: uuidv4(),
+        id: uuid.v4(),
         name: "Python",
         level: 3,
       },

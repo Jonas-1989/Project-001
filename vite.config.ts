@@ -20,11 +20,18 @@ export default defineConfig({
     sourcemap: true,
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom'],
-        },
-      },
-      external: ['uuid'],
+        manualChunks: (id) => {
+          if (id.includes('node_modules')) {
+            if (id.includes('uuid')) {
+              return 'uuid';
+            }
+            if (id.includes('react')) {
+              return 'react';
+            }
+            return 'vendor';
+          }
+        }
+      }
     },
     commonjsOptions: {
       include: [/node_modules/],
@@ -32,6 +39,6 @@ export default defineConfig({
     }
   },
   optimizeDeps: {
-    include: ['uuid']
+    include: ['uuid', 'react', 'react-dom', 'react-router-dom']
   }
 });

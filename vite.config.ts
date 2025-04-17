@@ -19,6 +19,7 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: true,
     rollupOptions: {
+      external: ['react-image-crop'],
       output: {
         manualChunks: {
           'vendor': [
@@ -35,8 +36,7 @@ export default defineConfig({
             '@radix-ui/react-toast',
             '@radix-ui/react-tabs',
             'html2canvas',
-            'jspdf',
-            'react-image-crop'
+            'jspdf'
           ]
         }
       }

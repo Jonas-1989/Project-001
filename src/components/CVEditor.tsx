@@ -1,4 +1,4 @@
-import { useState, useRef, ChangeEvent } from "react";
+import { useState, useRef, useEffect, ChangeEvent } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { CVData, Skill, Language } from "@/lib/types";
 import ReactCrop, { Crop } from 'react-image-crop';
@@ -303,6 +303,32 @@ const CVEditor = ({ cvData, onUpdateCV }: CVEditorProps) => {
     setActiveSection(section);
   };
 
+  // Add intersection observer to update active section on scroll
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const sectionId = entry.target.id;
+            setActiveSection(sectionId);
+          }
+        });
+      },
+      {
+        rootMargin: '-50px 0px -50% 0px'
+      }
+    );
+
+    Object.entries(sectionRefs).forEach(([key, ref]) => {
+      if (ref.current) {
+        ref.current.id = key;
+        observer.observe(ref.current);
+      }
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div className="relative flex flex-col gap-6 p-4">
       {/* Mobile Navigation */}
@@ -312,6 +338,7 @@ const CVEditor = ({ cvData, onUpdateCV }: CVEditorProps) => {
             variant={activeSection === "personal" ? "default" : "ghost"}
             size="sm"
             onClick={() => scrollToSection("personal")}
+            className="whitespace-nowrap"
           >
             Personal
           </Button>
@@ -319,6 +346,7 @@ const CVEditor = ({ cvData, onUpdateCV }: CVEditorProps) => {
             variant={activeSection === "experience" ? "default" : "ghost"}
             size="sm"
             onClick={() => scrollToSection("experience")}
+            className="whitespace-nowrap"
           >
             Experience
           </Button>
@@ -326,6 +354,7 @@ const CVEditor = ({ cvData, onUpdateCV }: CVEditorProps) => {
             variant={activeSection === "education" ? "default" : "ghost"}
             size="sm"
             onClick={() => scrollToSection("education")}
+            className="whitespace-nowrap"
           >
             Education
           </Button>
@@ -333,6 +362,7 @@ const CVEditor = ({ cvData, onUpdateCV }: CVEditorProps) => {
             variant={activeSection === "languages" ? "default" : "ghost"}
             size="sm"
             onClick={() => scrollToSection("languages")}
+            className="whitespace-nowrap"
           >
             Languages
           </Button>
@@ -340,6 +370,7 @@ const CVEditor = ({ cvData, onUpdateCV }: CVEditorProps) => {
             variant={activeSection === "skills" ? "default" : "ghost"}
             size="sm"
             onClick={() => scrollToSection("skills")}
+            className="whitespace-nowrap"
           >
             Skills
           </Button>

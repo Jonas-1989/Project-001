@@ -1,6 +1,0 @@
-warning: in the working copy of 'src/components/CVPreview.tsx', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'src/components/TemplateSelector.tsx', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'src/pages/Editor.tsx', LF will be replaced by CRLF the next time Git touches it
-src/components/CVPreview.tsx
-src/components/TemplateSelector.tsx
-src/pages/Editor.tsx

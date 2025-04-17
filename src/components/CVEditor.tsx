@@ -59,6 +59,14 @@ const CVEditor = ({ cvData, onUpdateCV }: CVEditorProps) => {
     x: 5,
     y: 5
   });
+  const [activeSection, setActiveSection] = useState("personal");
+  const sectionRefs = {
+    personal: useRef<HTMLDivElement>(null),
+    experience: useRef<HTMLDivElement>(null),
+    education: useRef<HTMLDivElement>(null),
+    languages: useRef<HTMLDivElement>(null),
+    skills: useRef<HTMLDivElement>(null),
+  };
   
   const handlePersonalInfoChange = (field: string, value: string) => {
     onUpdateCV({
@@ -287,8 +295,57 @@ const CVEditor = ({ cvData, onUpdateCV }: CVEditorProps) => {
     });
   };
 
+  const scrollToSection = (section: string) => {
+    sectionRefs[section as keyof typeof sectionRefs]?.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    });
+    setActiveSection(section);
+  };
+
   return (
-    <div className="p-4 bg-white rounded-lg shadow">
+    <div className="relative flex flex-col gap-6 p-4">
+      {/* Mobile Navigation */}
+      <div className="sticky top-0 z-10 -mx-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 md:hidden">
+        <div className="flex gap-2 p-4 overflow-x-auto no-scrollbar">
+          <Button
+            variant={activeSection === "personal" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => scrollToSection("personal")}
+          >
+            Personal
+          </Button>
+          <Button
+            variant={activeSection === "experience" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => scrollToSection("experience")}
+          >
+            Experience
+          </Button>
+          <Button
+            variant={activeSection === "education" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => scrollToSection("education")}
+          >
+            Education
+          </Button>
+          <Button
+            variant={activeSection === "languages" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => scrollToSection("languages")}
+          >
+            Languages
+          </Button>
+          <Button
+            variant={activeSection === "skills" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => scrollToSection("skills")}
+          >
+            Skills
+          </Button>
+        </div>
+      </div>
+
       <Dialog open={showCropDialog} onOpenChange={setShowCropDialog}>
         <DialogContent className="max-w-[800px] w-full p-6 max-h-[90vh] flex flex-col">
           <DialogHeader>

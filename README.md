@@ -1,99 +1,73 @@
-# CV Builder Application
+# Welcome to your Lovable project
 
-A modern, responsive CV builder application built with React, TypeScript, and Vite.
+## Project info
 
-## Features
+**URL**: https://lovable.dev/projects/72f28948-551d-41be-9696-af2fc82fd783
 
-- Create and edit professional CVs
-- Multiple CV templates (Professional, Modern, Creative)
-- Real-time preview
-- PDF export functionality
-- Profile picture upload
-- Dark mode support
-- Responsive design
-- French language interface
+## How can I edit this code?
 
-## Technologies Used
+There are several ways of editing your application.
 
-- React
-- TypeScript
-- Vite
-- Tailwind CSS
-- shadcn/ui components
-- HTML2Canvas
-- jsPDF
-- React Router
+**Use Lovable**
 
-## Getting Started
+Simply visit the [Lovable Project](https://lovable.dev/projects/72f28948-551d-41be-9696-af2fc82fd783) and start prompting.
 
-### Prerequisites
+Changes made via Lovable will be committed automatically to this repo.
 
-- Node.js (v16 or higher)
-- npm or yarn
+**Use your preferred IDE**
 
-### Installation
+If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
 
-1. Clone the repository:
-```bash
-git clone https://github.com/Jonas-1989/cv-clone-creator-fr.git
-cd cv-clone-creator-fr
-```
+The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
-2. Install dependencies:
-```bash
-npm install
-```
+Follow these steps:
 
-3. Start the development server:
-```bash
+```sh
+# Step 1: Clone the repository using the project's Git URL.
+git clone <YOUR_GIT_URL>
+
+# Step 2: Navigate to the project directory.
+cd <YOUR_PROJECT_NAME>
+
+# Step 3: Install the necessary dependencies.
+npm i
+
+# Step 4: Start the development server with auto-reloading and an instant preview.
 npm run dev
 ```
 
-The application will be available at http://localhost:3000
+**Edit a file directly in GitHub**
 
-## Project Structure
+- Navigate to the desired file(s).
+- Click the "Edit" button (pencil icon) at the top right of the file view.
+- Make your changes and commit the changes.
 
-```
-cv-clone-creator-fr/
-├── public/              # Static assets
-├── src/
-│   ├── components/      # React components
-│   ├── pages/          # Page components
-│   ├── styles/         # Global styles
-│   ├── types/          # TypeScript types
-│   ├── utils/          # Utility functions
-│   ├── App.tsx         # Main application component
-│   └── main.tsx        # Application entry point
-├── package.json        # Project dependencies
-├── tsconfig.json       # TypeScript configuration
-├── vite.config.ts      # Vite configuration
-└── README.md           # Project documentation
-```
+**Use GitHub Codespaces**
 
-## Available Scripts
+- Navigate to the main page of your repository.
+- Click on the "Code" button (green button) near the top right.
+- Select the "Codespaces" tab.
+- Click on "New codespace" to launch a new Codespace environment.
+- Edit files directly within the Codespace and commit and push your changes once you're done.
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
+## What technologies are used for this project?
 
-## Deployment
+This project is built with:
 
-The application is deployed on Vercel and can be accessed at:
-https://cvbluilder.vercel.app
+- Vite
+- TypeScript
+- React
+- shadcn-ui
+- Tailwind CSS
 
-## Contributing
+## How can I deploy this project?
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+Simply open [Lovable](https://lovable.dev/projects/72f28948-551d-41be-9696-af2fc82fd783) and click on Share -> Publish.
 
-## License
+## Can I connect a custom domain to my Lovable project?
 
-This project is licensed under the MIT License.
+Yes it is!
 
-## Contact
+To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
-For any questions or suggestions, please open an issue in the repository.
+Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)

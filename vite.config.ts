@@ -33,6 +33,7 @@ export default defineConfig({
             '@radix-ui/react-select',
             '@radix-ui/react-slot',
             '@radix-ui/react-toast',
+            '@radix-ui/react-tabs',
             'html2canvas',
             'jspdf'
           ]

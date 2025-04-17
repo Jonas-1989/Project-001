@@ -20,16 +20,22 @@ export default defineConfig({
     sourcemap: true,
     rollupOptions: {
       output: {
-        manualChunks: (id) => {
-          if (id.includes('node_modules')) {
-            if (id.includes('uuid')) {
-              return 'uuid';
-            }
-            if (id.includes('react')) {
-              return 'react';
-            }
-            return 'vendor';
-          }
+        manualChunks: {
+          'vendor': [
+            'react',
+            'react-dom',
+            'react-router-dom',
+            'uuid',
+            '@radix-ui/react-avatar',
+            '@radix-ui/react-dialog',
+            '@radix-ui/react-dropdown-menu',
+            '@radix-ui/react-label',
+            '@radix-ui/react-select',
+            '@radix-ui/react-slot',
+            '@radix-ui/react-toast',
+            'html2canvas',
+            'jspdf'
+          ]
         }
       }
     },
@@ -39,6 +45,6 @@ export default defineConfig({
     }
   },
   optimizeDeps: {
-    include: ['uuid', 'react', 'react-dom', 'react-router-dom']
+    include: ['uuid']
   }
 });

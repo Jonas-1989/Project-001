@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, ChangeEvent } from "react";
+import { useState, useRef, ChangeEvent } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { CVData, Skill, Language } from "@/lib/types";
 import ReactCrop, { Crop } from 'react-image-crop';
@@ -59,14 +59,6 @@ const CVEditor = ({ cvData, onUpdateCV }: CVEditorProps) => {
     x: 5,
     y: 5
   });
-  const [activeSection, setActiveSection] = useState("personal");
-  const sectionRefs = {
-    personal: useRef<HTMLDivElement>(null),
-    experience: useRef<HTMLDivElement>(null),
-    education: useRef<HTMLDivElement>(null),
-    languages: useRef<HTMLDivElement>(null),
-    skills: useRef<HTMLDivElement>(null),
-  };
   
   const handlePersonalInfoChange = (field: string, value: string) => {
     onUpdateCV({
@@ -295,122 +287,370 @@ const CVEditor = ({ cvData, onUpdateCV }: CVEditorProps) => {
     });
   };
 
-  const scrollToSection = (section: string) => {
-    sectionRefs[section as keyof typeof sectionRefs]?.current?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start'
-    });
-    setActiveSection(section);
-  };
-
-  // Add intersection observer to update active section on scroll
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const sectionId = entry.target.id;
-            setActiveSection(sectionId);
-          }
-        });
-      },
-      {
-        rootMargin: '-50px 0px -50% 0px'
-      }
-    );
-
-    Object.entries(sectionRefs).forEach(([key, ref]) => {
-      if (ref.current) {
-        ref.current.id = key;
-        observer.observe(ref.current);
-      }
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <div className="relative flex flex-col gap-6 p-4">
-      {/* Mobile Navigation */}
-      <div className="sticky top-0 z-10 -mx-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 md:hidden">
-        <div className="flex gap-2 p-4 overflow-x-auto no-scrollbar">
-          <Button
-            variant={activeSection === "personal" ? "default" : "ghost"}
-            size="sm"
-            onClick={() => scrollToSection("personal")}
-            className="whitespace-nowrap"
-          >
-            Personal
-          </Button>
-          <Button
-            variant={activeSection === "experience" ? "default" : "ghost"}
-            size="sm"
-            onClick={() => scrollToSection("experience")}
-            className="whitespace-nowrap"
-          >
-            Experience
-          </Button>
-          <Button
-            variant={activeSection === "education" ? "default" : "ghost"}
-            size="sm"
-            onClick={() => scrollToSection("education")}
-            className="whitespace-nowrap"
-          >
-            Education
-          </Button>
-          <Button
-            variant={activeSection === "languages" ? "default" : "ghost"}
-            size="sm"
-            onClick={() => scrollToSection("languages")}
-            className="whitespace-nowrap"
-          >
-            Languages
-          </Button>
-          <Button
-            variant={activeSection === "skills" ? "default" : "ghost"}
-            size="sm"
-            onClick={() => scrollToSection("skills")}
-            className="whitespace-nowrap"
-          >
-            Skills
-          </Button>
-        </div>
-      </div>
+    <div className="w-full max-w-4xl mx-auto p-4">
+      <Tabs defaultValue="personal" className="w-full">
+        <TabsList className="w-full grid grid-cols-2 md:grid-cols-5 mb-4">
+          <TabsTrigger value="personal" className="text-sm md:text-base">Personnel</TabsTrigger>
+          <TabsTrigger value="experience" className="text-sm md:text-base">Expérience</TabsTrigger>
+          <TabsTrigger value="education" className="text-sm md:text-base">Formation</TabsTrigger>
+          <TabsTrigger value="languages" className="text-sm md:text-base">Langues</TabsTrigger>
+          <TabsTrigger value="skills" className="text-sm md:text-base">Compétences</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="personal" className="mt-0">
+          <CVSection title="Informations Personnelles">
+            <div className="space-y-4">
+              <div className="flex flex-col items-center mb-6">
+                <Avatar className="w-32 h-32 mb-4">
+                  {cvData.personalInfo.photo ? (
+                    <AvatarImage src={cvData.personalInfo.photo} alt="Photo de profil" />
+                  ) : (
+                    <AvatarFallback>
+                      <Camera className="w-8 h-8" />
+                    </AvatarFallback>
+                  )}
+                </Avatar>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  className="hidden"
+                  accept="image/*"
+                  onChange={handlePhotoUpload}
+                />
+                <Button onClick={triggerFileInput} variant="outline" size="sm" className="w-full max-w-[200px]">
+                  <Upload className="w-4 h-4 mr-2" />
+                  Ajouter une photo
+                </Button>
+              </div>
+
+              <div className="grid gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Input
+                    placeholder="Prénom"
+                    value={cvData.personalInfo.firstName}
+                    onChange={(e) => handlePersonalInfoChange("firstName", e.target.value)}
+                  />
+                  <Input
+                    placeholder="Nom"
+                    value={cvData.personalInfo.lastName}
+                    onChange={(e) => handlePersonalInfoChange("lastName", e.target.value)}
+                  />
+                </div>
+                <Input
+                  placeholder="Titre professionnel"
+                  value={cvData.personalInfo.title}
+                  onChange={(e) => handlePersonalInfoChange("title", e.target.value)}
+                />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Input
+                    placeholder="Email"
+                    type="email"
+                    value={cvData.personalInfo.email}
+                    onChange={(e) => handlePersonalInfoChange("email", e.target.value)}
+                  />
+                  <Input
+                    placeholder="Téléphone"
+                    type="tel"
+                    value={cvData.personalInfo.phone}
+                    onChange={(e) => handlePersonalInfoChange("phone", e.target.value)}
+                  />
+                </div>
+                <Input
+                  placeholder="Adresse"
+                  value={cvData.personalInfo.location}
+                  onChange={(e) => handlePersonalInfoChange("location", e.target.value)}
+                />
+                <Textarea
+                  placeholder="À propos de moi"
+                  value={cvData.personalInfo.summary}
+                  onChange={(e) => handlePersonalInfoChange("summary", e.target.value)}
+                  className="min-h-[100px]"
+                />
+              </div>
+            </div>
+          </CVSection>
+        </TabsContent>
+
+        <TabsContent value="experience">
+          <CVSection title="Professional Experience" collapsible={false}>
+            {cvData.experiences.map((experience, index) => (
+              <div key={experience.id} className="mb-6">
+                {index > 0 && <Separator className="mb-6" />}
+                <div className="flex justify-between items-center mb-2">
+                  <h4 className="font-medium">Position {index + 1}</h4>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => removeExperience(experience.id)}
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" /> Remove
+                  </Button>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="form-item">
+                    <label className="block text-gray-700">Company</label>
+                    <Input 
+                      value={experience.company}
+                      onChange={(e) => updateExperience(index, "company", e.target.value)}
+                    />
+                  </div>
+                  
+                  <div className="form-item">
+                    <label className="block text-gray-700">Position</label>
+                    <Input 
+                      value={experience.position}
+                      onChange={(e) => updateExperience(index, "position", e.target.value)}
+                    />
+                  </div>
+                  
+                  <div className="form-item">
+                    <label className="block text-gray-700">Start Date</label>
+                    <Input 
+                      type="text" 
+                      placeholder="MM/YYYY"
+                      value={experience.startDate}
+                      onChange={(e) => updateExperience(index, "startDate", e.target.value)}
+                    />
+                  </div>
+                  
+                  <div className="form-item">
+                    <label className="block text-gray-700">End Date</label>
+                    <div className="flex items-center gap-2">
+                      <Input 
+                        type="text" 
+                        placeholder="MM/YYYY"
+                        value={experience.endDate}
+                        onChange={(e) => updateExperience(index, "endDate", e.target.value)}
+                        disabled={experience.current}
+                      />
+                      <div className="flex items-center">
+                        <input 
+                          type="checkbox"
+                          id={`current-${experience.id}`}
+                          checked={experience.current}
+                          onChange={(e) => updateExperience(index, "current", e.target.checked)}
+                          className="mr-2"
+                        />
+                        <label htmlFor={`current-${experience.id}`} className="text-sm">Current</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="form-item mt-4">
+                  <label className="block text-gray-700">Description</label>
+                  <Textarea 
+                    value={experience.description}
+                    onChange={(e) => updateExperience(index, "description", e.target.value)}
+                    rows={3}
+                  />
+                </div>
+              </div>
+            ))}
+            
+            <Button onClick={addExperience} className="mt-2">
+              <PlusCircle className="h-4 w-4 mr-2" /> Add Experience
+            </Button>
+          </CVSection>
+        </TabsContent>
+        
+        <TabsContent value="education">
+          <CVSection title="Education" collapsible={false}>
+            {cvData.education.map((education, index) => (
+              <div key={education.id} className="mb-6">
+                {index > 0 && <Separator className="mb-6" />}
+                <div className="flex justify-between items-center mb-2">
+                  <h4 className="font-medium">Education {index + 1}</h4>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => removeEducation(education.id)}
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" /> Remove
+                  </Button>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="form-item">
+                    <label className="block text-gray-700">Institution</label>
+                    <Input 
+                      value={education.institution}
+                      onChange={(e) => updateEducation(index, "institution", e.target.value)}
+                    />
+                  </div>
+                  
+                  <div className="form-item">
+                    <label className="block text-gray-700">Degree</label>
+                    <Input 
+                      value={education.degree}
+                      onChange={(e) => updateEducation(index, "degree", e.target.value)}
+                    />
+                  </div>
+                  
+                  <div className="form-item">
+                    <label className="block text-gray-700">Field of Study</label>
+                    <Input 
+                      value={education.field}
+                      onChange={(e) => updateEducation(index, "field", e.target.value)}
+                    />
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="form-item">
+                      <label className="block text-gray-700">Start Date</label>
+                      <Input 
+                        type="text" 
+                        placeholder="MM/YYYY"
+                        value={education.startDate}
+                        onChange={(e) => updateEducation(index, "startDate", e.target.value)}
+                      />
+                    </div>
+                    
+                    <div className="form-item">
+                      <label className="block text-gray-700">End Date</label>
+                      <Input 
+                        type="text" 
+                        placeholder="MM/YYYY"
+                        value={education.endDate}
+                        onChange={(e) => updateEducation(index, "endDate", e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="form-item mt-4">
+                  <label className="block text-gray-700">Description</label>
+                  <Textarea 
+                    value={education.description}
+                    onChange={(e) => updateEducation(index, "description", e.target.value)}
+                    rows={2}
+                  />
+                </div>
+              </div>
+            ))}
+            
+            <Button onClick={addEducation} className="mt-2">
+              <PlusCircle className="h-4 w-4 mr-2" /> Add Education
+            </Button>
+          </CVSection>
+        </TabsContent>
+        
+        <TabsContent value="languages">
+          <CVSection title="Languages" collapsible={false}>
+            <div className="space-y-4">
+              {(cvData.languages || []).map((language, index) => (
+                <div key={language.id} className="flex items-center space-x-2">
+                  <Input
+                    className="flex-1"
+                    placeholder="Language name"
+                    value={language.name}
+                    onChange={(e) => updateLanguage(index, 'name', e.target.value)}
+                  />
+                  
+                  <Select 
+                    value={language.level.toString()} 
+                    onValueChange={(value) => updateLanguage(index, 'level', parseInt(value))}
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Level" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {LANGUAGE_LEVELS.map((level) => (
+                        <SelectItem key={level.value} value={level.value.toString()}>
+                          {level.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  <Button 
+                    variant="outline" 
+                    size="icon"
+                    onClick={() => removeLanguage(language.id)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+              
+              <Button onClick={addLanguage} className="mt-2">
+                <PlusCircle className="h-4 w-4 mr-2" /> Add Language
+              </Button>
+            </div>
+          </CVSection>
+        </TabsContent>
+        
+        <TabsContent value="skills">
+          <CVSection title="Skills" collapsible={false}>
+            <div className="space-y-4">
+              {cvData.skills.map((skill, index) => (
+                <div key={skill.id} className="flex items-center space-x-2">
+                  <Select 
+                    value={skill.level.toString()} 
+                    onValueChange={(value) => updateSkill(index, 'level', parseInt(value))}
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Level" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {SKILL_LEVELS.map((level) => (
+                        <SelectItem key={level.value} value={level.value.toString()}>
+                          {level.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  <Input
+                    className="flex-1"
+                    placeholder="Skill name"
+                    value={skill.name}
+                    onChange={(e) => updateSkill(index, 'name', e.target.value)}
+                  />
+
+                  <Button 
+                    variant="outline" 
+                    size="icon"
+                    onClick={() => removeSkill(skill.id)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+              
+              <Button onClick={addSkill} className="mt-2">
+                <PlusCircle className="h-4 w-4 mr-2" /> Add Skill
+              </Button>
+            </div>
+          </CVSection>
+        </TabsContent>
+      </Tabs>
 
       <Dialog open={showCropDialog} onOpenChange={setShowCropDialog}>
-        <DialogContent className="max-w-[800px] w-full p-6 max-h-[90vh] flex flex-col">
+        <DialogContent className="max-w-[90vw] w-full md:max-w-xl">
           <DialogHeader>
             <DialogTitle>Ajuster la photo</DialogTitle>
-            <p className="text-sm text-gray-500 mt-2">
-              Déplacez le cercle pour sélectionner la zone de votre photo
-            </p>
           </DialogHeader>
-          
-          <div className="mt-4 flex-1 overflow-y-auto min-h-0">
+          <div className="relative">
             {uploadedImage && (
-              <div className="relative">
-                <ReactCrop
-                  crop={crop}
-                  onChange={c => setCrop(c)}
-                  aspect={1}
-                  circularCrop
-                  locked={true}
-                  keepSelection={true}
-                  className="rounded-lg overflow-hidden"
-                >
-                  <img
-                    ref={imgRef}
-                    src={uploadedImage}
-                    alt="Crop preview"
-                    className="max-h-[60vh] w-auto mx-auto"
-                    style={{ maxWidth: '100%' }}
-                  />
-                </ReactCrop>
-              </div>
+              <ReactCrop
+                crop={crop}
+                onChange={c => setCrop(c)}
+                aspect={1}
+                circularCrop
+              >
+                <img
+                  ref={imgRef}
+                  src={uploadedImage}
+                  alt="Upload"
+                  className="max-h-[60vh] w-auto mx-auto"
+                />
+              </ReactCrop>
             )}
           </div>
-
-          <div className="flex justify-end gap-2 mt-4 pt-4 border-t">
+          <div className="flex justify-end gap-2 mt-4">
             <Button
               variant="outline"
               onClick={() => {
@@ -426,7 +666,7 @@ const CVEditor = ({ cvData, onUpdateCV }: CVEditorProps) => {
             >
               {isProcessing ? (
                 <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                   Traitement...
                 </>
               ) : (
@@ -436,675 +676,6 @@ const CVEditor = ({ cvData, onUpdateCV }: CVEditorProps) => {
           </div>
         </DialogContent>
       </Dialog>
-
-      <Tabs defaultValue="personal">
-        <TabsList className="mb-4 w-full">
-          <TabsTrigger value="personal">Personal</TabsTrigger>
-          <TabsTrigger value="experience">Experience</TabsTrigger>
-          <TabsTrigger value="education">Education</TabsTrigger>
-          <TabsTrigger value="languages">Languages</TabsTrigger>
-          <TabsTrigger value="skills">Skills</TabsTrigger>
-        </TabsList>
-        
-        <div>
-          <TabsContent value="personal">
-            <CVSection title="Personal Information" collapsible={false}>
-              <div className="space-y-6">
-                <div className="flex justify-center mb-6">
-                  <div className="w-[152px] h-[152px] relative group">
-                    <div 
-                      onClick={triggerFileInput} 
-                      className="w-full h-full border-2 border-dashed border-gray-300 rounded-full overflow-hidden flex flex-col justify-center items-center bg-gray-50 cursor-pointer hover:bg-gray-100 hover:border-gray-400 transition-all relative"
-                    >
-                      {isProcessing ? (
-                        <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                          <Loader2 className="h-8 w-8 text-white animate-spin" />
-                        </div>
-                      ) : cvData.personalInfo.photo ? (
-                        <>
-                          <Avatar className="w-full h-full rounded-full">
-                            <AvatarImage 
-                              src={cvData.personalInfo.photo} 
-                              alt="Profile" 
-                              className="object-cover w-full h-full"
-                              style={{
-                                imageRendering: '-webkit-optimize-contrast',
-                                transform: 'translateZ(0)',
-                                backfaceVisibility: 'hidden'
-                              }}
-                            />
-                            <AvatarFallback>
-                              <Camera className="h-7 w-7 text-gray-400" />
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
-                            <Camera className="h-8 w-8 text-white" />
-                          </div>
-                        </>
-                      ) : (
-                        <>
-                          <Camera className="h-9 w-9 text-gray-400 mb-1" />
-                          <span className="text-xs text-gray-500 text-center px-2">
-                            Cliquez pour ajouter
-                            <br />
-                            JPG, PNG, WebP
-                            <br />
-                            Max 5MB
-                          </span>
-                        </>
-                      )}
-                    </div>
-                    <input
-                      type="file"
-                      ref={fileInputRef}
-                      onChange={handlePhotoUpload}
-                      accept={Object.entries(ACCEPTED_IMAGE_TYPES)
-                        .map(([type, exts]) => exts.join(','))
-                        .join(',')}
-                      className="hidden"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="form-item">
-                    <label className="block text-gray-700 mb-1 font-medium">Prénom</label>
-                    <Input 
-                      placeholder="Ex: Jean"
-                      value={cvData.personalInfo.firstName} 
-                      onChange={(e) => handlePersonalInfoChange("firstName", e.target.value)} 
-                    />
-                  </div>
-                  
-                  <div className="form-item">
-                    <label className="block text-gray-700 mb-1 font-medium">Nom</label>
-                    <Input 
-                      placeholder="Ex: Dupont"
-                      value={cvData.personalInfo.lastName} 
-                      onChange={(e) => handlePersonalInfoChange("lastName", e.target.value)} 
-                    />
-                  </div>
-                </div>
-
-                <div className="form-item">
-                  <label className="block text-gray-700 mb-1 font-medium">Titre professionnel</label>
-                  <Input 
-                    placeholder="Ex: Développeur Full Stack"
-                    value={cvData.personalInfo.title} 
-                    onChange={(e) => handlePersonalInfoChange("title", e.target.value)} 
-                  />
-                </div>
-
-                <div className="space-y-4">
-                  <h3 className="text-md font-semibold text-gray-700">Coordonnées</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="form-item">
-                      <label className="block text-gray-700 mb-1 font-medium">Email</label>
-                      <Input 
-                        type="email"
-                        placeholder="Ex: jean.dupont@email.com"
-                        value={cvData.personalInfo.email} 
-                        onChange={(e) => handlePersonalInfoChange("email", e.target.value)} 
-                      />
-                    </div>
-                    
-                    <div className="form-item">
-                      <label className="block text-gray-700 mb-1 font-medium">Téléphone</label>
-                      <Input 
-                        placeholder="Ex: +33 6 12 34 56 78"
-                        value={cvData.personalInfo.phone} 
-                        onChange={(e) => handlePersonalInfoChange("phone", e.target.value)} 
-                      />
-                    </div>
-
-                    <div className="form-item md:col-span-2">
-                      <label className="block text-gray-700 mb-1 font-medium">Adresse</label>
-                      <Input 
-                        placeholder="Ex: Paris, France"
-                        value={cvData.personalInfo.location} 
-                        onChange={(e) => handlePersonalInfoChange("location", e.target.value)} 
-                      />
-                    </div>
-                  </div>
-
-                  {/* Optional Information Section */}
-                  <div className="space-y-4 mt-6">
-                    <h3 className="text-md font-semibold text-gray-700">Informations optionnelles</h3>
-                    <div className="flex flex-wrap items-center gap-2">
-                      {!cvData.personalInfo.birthDate && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="h-8 px-3 text-xs"
-                          onClick={() => {
-                            const newPersonalInfo = { ...cvData.personalInfo };
-                            newPersonalInfo.birthDate = "";
-                            onUpdateCV({ personalInfo: newPersonalInfo });
-                          }}
-                        >
-                          <PlusCircle className="h-3 w-3 mr-1" />
-                          Date de naissance
-                        </Button>
-                      )}
-                      {!cvData.personalInfo.gender && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="h-8 px-3 text-xs"
-                          onClick={() => {
-                            const newPersonalInfo = { ...cvData.personalInfo };
-                            newPersonalInfo.gender = "male";
-                            onUpdateCV({ personalInfo: newPersonalInfo });
-                          }}
-                        >
-                          <PlusCircle className="h-3 w-3 mr-1" />
-                          Sexe
-                        </Button>
-                      )}
-                      {!cvData.personalInfo.maritalStatus && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="h-8 px-3 text-xs"
-                          onClick={() => {
-                            const newPersonalInfo = { ...cvData.personalInfo };
-                            newPersonalInfo.maritalStatus = "single";
-                            onUpdateCV({ personalInfo: newPersonalInfo });
-                          }}
-                        >
-                          <PlusCircle className="h-3 w-3 mr-1" />
-                          État civil
-                        </Button>
-                      )}
-                      {!cvData.personalInfo.drivingLicense && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="h-8 px-3 text-xs"
-                          onClick={() => {
-                            const newPersonalInfo = { ...cvData.personalInfo };
-                            newPersonalInfo.drivingLicense = "";
-                            onUpdateCV({ personalInfo: newPersonalInfo });
-                          }}
-                        >
-                          <PlusCircle className="h-3 w-3 mr-1" />
-                          Permis de conduire
-                        </Button>
-                      )}
-                      {!cvData.personalInfo.linkedin && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="h-8 px-3 text-xs"
-                          onClick={() => {
-                            const newPersonalInfo = { ...cvData.personalInfo };
-                            newPersonalInfo.linkedin = "";
-                            onUpdateCV({ personalInfo: newPersonalInfo });
-                          }}
-                        >
-                          <PlusCircle className="h-3 w-3 mr-1" />
-                          LinkedIn
-                        </Button>
-                      )}
-                      {!cvData.personalInfo.customField && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="h-8 px-3 text-xs"
-                          onClick={() => {
-                            const newPersonalInfo = { ...cvData.personalInfo };
-                            newPersonalInfo.customField = "";
-                            onUpdateCV({ personalInfo: newPersonalInfo });
-                          }}
-                        >
-                          <PlusCircle className="h-3 w-3 mr-1" />
-                          Champ personnalisé
-                        </Button>
-                      )}
-                    </div>
-
-                    {/* Render active optional fields */}
-                    <div className="space-y-4">
-                      {cvData.personalInfo.birthDate !== undefined && (
-                        <div className="flex items-center gap-2">
-                          <div className="flex-1">
-                            <label className="block text-gray-700 mb-1 font-medium">Date de naissance</label>
-                            <Input
-                              type="date"
-                              value={cvData.personalInfo.birthDate}
-                              onChange={(e) => handlePersonalInfoChange("birthDate", e.target.value)}
-                            />
-                          </div>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="self-end mb-1"
-                            onClick={() => {
-                              const newPersonalInfo = { ...cvData.personalInfo };
-                              delete newPersonalInfo.birthDate;
-                              onUpdateCV({ personalInfo: newPersonalInfo });
-                            }}
-                          >
-                            <X className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      )}
-
-                      {cvData.personalInfo.gender !== undefined && (
-                        <div className="flex items-center gap-2">
-                          <div className="flex-1">
-                            <label className="block text-gray-700 mb-1 font-medium">Sexe</label>
-                            <Select 
-                              value={cvData.personalInfo.gender} 
-                              onValueChange={(value) => handlePersonalInfoChange("gender", value)}
-                            >
-                              <SelectTrigger>
-                                <SelectValue placeholder="Sélectionnez" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="male">Homme</SelectItem>
-                                <SelectItem value="female">Femme</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="self-end mb-1"
-                            onClick={() => {
-                              const newPersonalInfo = { ...cvData.personalInfo };
-                              delete newPersonalInfo.gender;
-                              onUpdateCV({ personalInfo: newPersonalInfo });
-                            }}
-                          >
-                            <X className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      )}
-
-                      {cvData.personalInfo.maritalStatus !== undefined && (
-                        <div className="flex items-center gap-2">
-                          <div className="flex-1">
-                            <label className="block text-gray-700 mb-1 font-medium">État civil</label>
-                            <Select 
-                              value={cvData.personalInfo.maritalStatus} 
-                              onValueChange={(value) => handlePersonalInfoChange("maritalStatus", value)}
-                            >
-                              <SelectTrigger>
-                                <SelectValue placeholder="Sélectionnez" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="single">Célibataire</SelectItem>
-                                <SelectItem value="married">Marié(e)</SelectItem>
-                                <SelectItem value="divorced">Divorcé(e)</SelectItem>
-                                <SelectItem value="widowed">Veuf/Veuve</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="self-end mb-1"
-                            onClick={() => {
-                              const newPersonalInfo = { ...cvData.personalInfo };
-                              delete newPersonalInfo.maritalStatus;
-                              onUpdateCV({ personalInfo: newPersonalInfo });
-                            }}
-                          >
-                            <X className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      )}
-
-                      {cvData.personalInfo.drivingLicense !== undefined && (
-                        <div className="flex items-center gap-2">
-                          <div className="flex-1">
-                            <label className="block text-gray-700 mb-1 font-medium">Permis de conduire</label>
-                            <Input
-                              value={cvData.personalInfo.drivingLicense}
-                              onChange={(e) => handlePersonalInfoChange("drivingLicense", e.target.value)}
-                              placeholder="Ex: B"
-                            />
-                          </div>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="self-end mb-1"
-                            onClick={() => {
-                              const newPersonalInfo = { ...cvData.personalInfo };
-                              delete newPersonalInfo.drivingLicense;
-                              onUpdateCV({ personalInfo: newPersonalInfo });
-                            }}
-                          >
-                            <X className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      )}
-
-                      {cvData.personalInfo.linkedin !== undefined && (
-                        <div className="flex items-center gap-2">
-                          <div className="flex-1">
-                            <label className="block text-gray-700 mb-1 font-medium">LinkedIn</label>
-                            <Input
-                              type="url"
-                              value={cvData.personalInfo.linkedin}
-                              onChange={(e) => handlePersonalInfoChange("linkedin", e.target.value)}
-                              placeholder="https://linkedin.com/in/..."
-                            />
-                          </div>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="self-end mb-1"
-                            onClick={() => {
-                              const newPersonalInfo = { ...cvData.personalInfo };
-                              delete newPersonalInfo.linkedin;
-                              onUpdateCV({ personalInfo: newPersonalInfo });
-                            }}
-                          >
-                            <X className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      )}
-
-                      {cvData.personalInfo.customField !== undefined && (
-                        <div className="flex items-center gap-2">
-                          <div className="flex-1">
-                            <label className="block text-gray-700 mb-1 font-medium">Champ personnalisé</label>
-                            <Input
-                              value={cvData.personalInfo.customField}
-                              onChange={(e) => handlePersonalInfoChange("customField", e.target.value)}
-                            />
-                          </div>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="self-end mb-1"
-                            onClick={() => {
-                              const newPersonalInfo = { ...cvData.personalInfo };
-                              delete newPersonalInfo.customField;
-                              onUpdateCV({ personalInfo: newPersonalInfo });
-                            }}
-                          >
-                            <X className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                </div>
-
-                <div className="space-y-2">
-                  <h3 className="text-md font-semibold text-gray-700">Résumé professionnel</h3>
-                  <Textarea 
-                    placeholder="Décrivez brièvement votre profil professionnel et vos objectifs..."
-                    value={cvData.personalInfo.summary}
-                    onChange={(e) => handlePersonalInfoChange("summary", e.target.value)}
-                    rows={4}
-                    className="resize-none"
-                  />
-                </div>
-              </div>
-            </CVSection>
-          </TabsContent>
-          
-          <TabsContent value="experience">
-            <CVSection title="Professional Experience" collapsible={false}>
-              {cvData.experiences.map((experience, index) => (
-                <div key={experience.id} className="mb-6">
-                  {index > 0 && <Separator className="mb-6" />}
-                  <div className="flex justify-between items-center mb-2">
-                    <h4 className="font-medium">Position {index + 1}</h4>
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={() => removeExperience(experience.id)}
-                    >
-                      <Trash2 className="h-4 w-4 mr-2" /> Remove
-                    </Button>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="form-item">
-                      <label className="block text-gray-700">Company</label>
-                      <Input 
-                        value={experience.company}
-                        onChange={(e) => updateExperience(index, "company", e.target.value)}
-                      />
-                    </div>
-                    
-                    <div className="form-item">
-                      <label className="block text-gray-700">Position</label>
-                      <Input 
-                        value={experience.position}
-                        onChange={(e) => updateExperience(index, "position", e.target.value)}
-                      />
-                    </div>
-                    
-                    <div className="form-item">
-                      <label className="block text-gray-700">Start Date</label>
-                      <Input 
-                        type="text" 
-                        placeholder="MM/YYYY"
-                        value={experience.startDate}
-                        onChange={(e) => updateExperience(index, "startDate", e.target.value)}
-                      />
-                    </div>
-                    
-                    <div className="form-item">
-                      <label className="block text-gray-700">End Date</label>
-                      <div className="flex items-center gap-2">
-                        <Input 
-                          type="text" 
-                          placeholder="MM/YYYY"
-                          value={experience.endDate}
-                          onChange={(e) => updateExperience(index, "endDate", e.target.value)}
-                          disabled={experience.current}
-                        />
-                        <div className="flex items-center">
-                          <input 
-                            type="checkbox"
-                            id={`current-${experience.id}`}
-                            checked={experience.current}
-                            onChange={(e) => updateExperience(index, "current", e.target.checked)}
-                            className="mr-2"
-                          />
-                          <label htmlFor={`current-${experience.id}`} className="text-sm">Current</label>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="form-item mt-4">
-                    <label className="block text-gray-700">Description</label>
-                    <Textarea 
-                      value={experience.description}
-                      onChange={(e) => updateExperience(index, "description", e.target.value)}
-                      rows={3}
-                    />
-                  </div>
-                </div>
-              ))}
-              
-              <Button onClick={addExperience} className="mt-2">
-                <PlusCircle className="h-4 w-4 mr-2" /> Add Experience
-              </Button>
-            </CVSection>
-          </TabsContent>
-          
-          <TabsContent value="education">
-            <CVSection title="Education" collapsible={false}>
-              {cvData.education.map((education, index) => (
-                <div key={education.id} className="mb-6">
-                  {index > 0 && <Separator className="mb-6" />}
-                  <div className="flex justify-between items-center mb-2">
-                    <h4 className="font-medium">Education {index + 1}</h4>
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={() => removeEducation(education.id)}
-                    >
-                      <Trash2 className="h-4 w-4 mr-2" /> Remove
-                    </Button>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="form-item">
-                      <label className="block text-gray-700">Institution</label>
-                      <Input 
-                        value={education.institution}
-                        onChange={(e) => updateEducation(index, "institution", e.target.value)}
-                      />
-                    </div>
-                    
-                    <div className="form-item">
-                      <label className="block text-gray-700">Degree</label>
-                      <Input 
-                        value={education.degree}
-                        onChange={(e) => updateEducation(index, "degree", e.target.value)}
-                      />
-                    </div>
-                    
-                    <div className="form-item">
-                      <label className="block text-gray-700">Field of Study</label>
-                      <Input 
-                        value={education.field}
-                        onChange={(e) => updateEducation(index, "field", e.target.value)}
-                      />
-                    </div>
-                    
-                    <div className="grid grid-cols-2 gap-2">
-                      <div className="form-item">
-                        <label className="block text-gray-700">Start Date</label>
-                        <Input 
-                          type="text" 
-                          placeholder="MM/YYYY"
-                          value={education.startDate}
-                          onChange={(e) => updateEducation(index, "startDate", e.target.value)}
-                        />
-                      </div>
-                      
-                      <div className="form-item">
-                        <label className="block text-gray-700">End Date</label>
-                        <Input 
-                          type="text" 
-                          placeholder="MM/YYYY"
-                          value={education.endDate}
-                          onChange={(e) => updateEducation(index, "endDate", e.target.value)}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="form-item mt-4">
-                    <label className="block text-gray-700">Description</label>
-                    <Textarea 
-                      value={education.description}
-                      onChange={(e) => updateEducation(index, "description", e.target.value)}
-                      rows={2}
-                    />
-                  </div>
-                </div>
-              ))}
-              
-              <Button onClick={addEducation} className="mt-2">
-                <PlusCircle className="h-4 w-4 mr-2" /> Add Education
-              </Button>
-            </CVSection>
-          </TabsContent>
-          
-          <TabsContent value="languages">
-            <CVSection title="Languages" collapsible={false}>
-              <div className="space-y-4">
-                {(cvData.languages || []).map((language, index) => (
-                  <div key={language.id} className="flex items-center space-x-2">
-                    <Input
-                      className="flex-1"
-                      placeholder="Language name"
-                      value={language.name}
-                      onChange={(e) => updateLanguage(index, 'name', e.target.value)}
-                    />
-                    
-                    <Select 
-                      value={language.level.toString()} 
-                      onValueChange={(value) => updateLanguage(index, 'level', parseInt(value))}
-                    >
-                      <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Level" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {LANGUAGE_LEVELS.map((level) => (
-                          <SelectItem key={level.value} value={level.value.toString()}>
-                            {level.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-
-                    <Button 
-                      variant="outline" 
-                      size="icon"
-                      onClick={() => removeLanguage(language.id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                ))}
-                
-                <Button onClick={addLanguage} className="mt-2">
-                  <PlusCircle className="h-4 w-4 mr-2" /> Add Language
-                </Button>
-              </div>
-            </CVSection>
-          </TabsContent>
-          
-          <TabsContent value="skills">
-            <CVSection title="Skills" collapsible={false}>
-              <div className="space-y-4">
-                {cvData.skills.map((skill, index) => (
-                  <div key={skill.id} className="flex items-center space-x-2">
-                    <Select 
-                      value={skill.level.toString()} 
-                      onValueChange={(value) => updateSkill(index, 'level', parseInt(value))}
-                    >
-                      <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Level" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {SKILL_LEVELS.map((level) => (
-                          <SelectItem key={level.value} value={level.value.toString()}>
-                            {level.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-
-                    <Input
-                      className="flex-1"
-                      placeholder="Skill name"
-                      value={skill.name}
-                      onChange={(e) => updateSkill(index, 'name', e.target.value)}
-                    />
-
-                    <Button 
-                      variant="outline" 
-                      size="icon"
-                      onClick={() => removeSkill(skill.id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                ))}
-                
-                <Button onClick={addSkill} className="mt-2">
-                  <PlusCircle className="h-4 w-4 mr-2" /> Add Skill
-                </Button>
-              </div>
-            </CVSection>
-          </TabsContent>
-        </div>
-      </Tabs>
     </div>
   );
 };

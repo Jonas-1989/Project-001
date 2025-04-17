@@ -19,7 +19,18 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: true,
     rollupOptions: {
-      external: ['react-image-crop'],
+      external: [
+        'react-image-crop',
+        '@radix-ui/react-avatar',
+        '@radix-ui/react-dialog',
+        '@radix-ui/react-dropdown-menu',
+        '@radix-ui/react-label',
+        '@radix-ui/react-select',
+        '@radix-ui/react-separator',
+        '@radix-ui/react-slot',
+        '@radix-ui/react-tabs',
+        '@radix-ui/react-toast'
+      ],
       output: {
         manualChunks: {
           'vendor': [
@@ -27,14 +38,6 @@ export default defineConfig({
             'react-dom',
             'react-router-dom',
             'uuid',
-            '@radix-ui/react-avatar',
-            '@radix-ui/react-dialog',
-            '@radix-ui/react-dropdown-menu',
-            '@radix-ui/react-label',
-            '@radix-ui/react-select',
-            '@radix-ui/react-slot',
-            '@radix-ui/react-toast',
-            '@radix-ui/react-tabs',
             'html2canvas',
             'jspdf'
           ]

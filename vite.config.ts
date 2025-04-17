@@ -19,18 +19,6 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: true,
     rollupOptions: {
-      external: [
-        'react-image-crop',
-        '@radix-ui/react-avatar',
-        '@radix-ui/react-dialog',
-        '@radix-ui/react-dropdown-menu',
-        '@radix-ui/react-label',
-        '@radix-ui/react-select',
-        '@radix-ui/react-separator',
-        '@radix-ui/react-slot',
-        '@radix-ui/react-tabs',
-        '@radix-ui/react-toast'
-      ],
       output: {
         manualChunks: {
           'vendor': [
@@ -39,7 +27,17 @@ export default defineConfig({
             'react-router-dom',
             'uuid',
             'html2canvas',
-            'jspdf'
+            'jspdf',
+            'react-image-crop',
+            '@radix-ui/react-avatar',
+            '@radix-ui/react-dialog',
+            '@radix-ui/react-dropdown-menu',
+            '@radix-ui/react-label',
+            '@radix-ui/react-select',
+            '@radix-ui/react-separator',
+            '@radix-ui/react-slot',
+            '@radix-ui/react-tabs',
+            '@radix-ui/react-toast'
           ]
         }
       }
@@ -50,6 +48,18 @@ export default defineConfig({
     }
   },
   optimizeDeps: {
-    include: ['uuid', 'react-image-crop']
+    include: [
+      'uuid', 
+      'react-image-crop',
+      '@radix-ui/react-avatar',
+      '@radix-ui/react-dialog',
+      '@radix-ui/react-dropdown-menu',
+      '@radix-ui/react-label',
+      '@radix-ui/react-select',
+      '@radix-ui/react-separator',
+      '@radix-ui/react-slot',
+      '@radix-ui/react-tabs',
+      '@radix-ui/react-toast'
+    ]
   }
 });

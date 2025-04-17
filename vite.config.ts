@@ -35,7 +35,8 @@ export default defineConfig({
             '@radix-ui/react-toast',
             '@radix-ui/react-tabs',
             'html2canvas',
-            'jspdf'
+            'jspdf',
+            'react-image-crop'
           ]
         }
       }
@@ -46,6 +47,6 @@ export default defineConfig({
     }
   },
   optimizeDeps: {
-    include: ['uuid']
+    include: ['uuid', 'react-image-crop']
   }
 });

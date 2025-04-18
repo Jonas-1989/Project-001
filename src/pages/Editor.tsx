@@ -266,53 +266,78 @@ const Editor = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-background">
       <Navbar />
-      <div className="flex flex-col lg:flex-row w-full min-h-[calc(100vh-64px)]">
-        {/* Left Column - Editor */}
-        <div className="w-full lg:w-[35%] border-r border-gray-200 dark:border-gray-800">
-          <div className="p-4">
-            <Tabs defaultValue="editor" className="w-full" onValueChange={setActiveTab}>
-              <TabsList className="w-full">
-                <TabsTrigger value="editor" className="flex-1">Editor</TabsTrigger>
-                <TabsTrigger value="template" className="flex-1">Template</TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="editor" className="mt-4">
+      <main className="container mx-auto p-4">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="editor">Editor</TabsTrigger>
+            <TabsTrigger value="template">Template</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="editor" className="space-y-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <div className="space-y-4">
                 <CVEditor cvData={cvData} onUpdateCV={handleUpdateCV} />
-              </TabsContent>
+              </div>
               
-              <TabsContent value="template" className="mt-4">
-                <TemplateSelector
-                  selectedTemplate={selectedTemplate}
-                  onSelectTemplate={setSelectedTemplate}
-                />
-              </TabsContent>
-            </Tabs>
-          </div>
-        </div>
+              {/* Mobile buttons - shown above preview on mobile */}
+              <div className="flex flex-col gap-2 lg:hidden">
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => setShowSaveModal(true)}
+                >
+                  <Save className="w-4 h-4 mr-2" />
+                  Save your CV
+                </Button>
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={handleDownloadPDF}
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Download PDF
+                </Button>
+              </div>
 
-        {/* Right Column - Preview */}
-        <div className="w-full lg:w-[65%] lg:flex-1 p-4 bg-gray-50 dark:bg-gray-900 overflow-y-auto">
-          <div className="sticky top-0 z-10 bg-gray-50 dark:bg-gray-900 pb-4 mb-4 flex justify-between items-center">
-            <h2 className="text-xl font-bold dark:text-gray-200">Preview</h2>
-            <div className="flex gap-2">
-              <Button onClick={handleSaveCV}>
-                <Save className="h-4 w-4 mr-2" /> Save your CV
-              </Button>
-              <Button onClick={handleDownloadPDF}>
-                <Download className="h-4 w-4 mr-2" /> Download PDF
-              </Button>
+              <div className="space-y-4">
+                <h2 className="text-2xl font-bold">Preview</h2>
+                {/* Desktop buttons - hidden on mobile */}
+                <div className="hidden lg:flex gap-2 mb-4">
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowSaveModal(true)}
+                  >
+                    <Save className="w-4 h-4 mr-2" />
+                    Save your CV
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={handleDownloadPDF}
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    Download PDF
+                  </Button>
+                </div>
+                <Card className="overflow-hidden">
+                  <div id="cv-preview">
+                    <CVPreview cvData={cvData} templateId={selectedTemplate} />
+                  </div>
+                </Card>
+              </div>
             </div>
-          </div>
-          
-          <div id="cv-preview" className="bg-white dark:bg-gray-800 max-w-4xl mx-auto rounded-lg shadow-sm">
-            <CVPreview cvData={cvData} templateId={selectedTemplate} />
-          </div>
-        </div>
-      </div>
+          </TabsContent>
 
-      {/* Save Profile Modal */}
+          <TabsContent value="template">
+            <TemplateSelector
+              selectedTemplate={selectedTemplate}
+              onSelectTemplate={setSelectedTemplate}
+            />
+          </TabsContent>
+        </Tabs>
+      </main>
+
       <Dialog open={showSaveModal} onOpenChange={setShowSaveModal}>
         <DialogContent className="sm:max-w-[425px] w-[80%] mx-auto dark:bg-gray-800">
           <DialogHeader>

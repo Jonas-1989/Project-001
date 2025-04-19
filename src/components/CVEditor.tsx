@@ -14,7 +14,6 @@ import { Form } from "@/components/ui/form";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { PlusCircle, Trash2, Upload, Camera, Loader2, X } from "lucide-react";
-import { useForm } from "react-hook-form"
 
 interface CVEditorProps {
   cvData: CVData;
@@ -61,8 +60,6 @@ const CVEditor = ({ cvData, onUpdateCV }: CVEditorProps) => {
     y: 5
   });
   
-  const form = useForm()
-
   const handlePersonalInfoChange = (field: string, value: string) => {
     onUpdateCV({
       personalInfo: {
@@ -352,39 +349,14 @@ const CVEditor = ({ cvData, onUpdateCV }: CVEditorProps) => {
         </DialogContent>
       </Dialog>
 
-      <Form {...form}>
+      <Form>
         <Tabs defaultValue="personal" className="w-full">
-          <TabsList className="flex flex-wrap gap-1 bg-transparent mb-4">
-            <TabsTrigger 
-              value="personal" 
-              className="rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-            >
-              Personal
-            </TabsTrigger>
-            <TabsTrigger 
-              value="experience"
-              className="rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-            >
-              Experience
-            </TabsTrigger>
-            <TabsTrigger 
-              value="education"
-              className="rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-            >
-              Education
-            </TabsTrigger>
-            <TabsTrigger 
-              value="languages"
-              className="rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-            >
-              Languages
-            </TabsTrigger>
-            <TabsTrigger 
-              value="skills"
-              className="rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-            >
-              Skills
-            </TabsTrigger>
+          <TabsList className="grid w-full grid-cols-3 md:grid-cols-5 gap-1 mb-4 overflow-x-auto">
+            <TabsTrigger value="personal">Personal</TabsTrigger>
+            <TabsTrigger value="experience">Experience</TabsTrigger>
+            <TabsTrigger value="education">Education</TabsTrigger>
+            <TabsTrigger value="languages">Languages</TabsTrigger>
+            <TabsTrigger value="skills">Skills</TabsTrigger>
           </TabsList>
           
           <div>

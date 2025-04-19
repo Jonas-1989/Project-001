@@ -294,27 +294,15 @@ const Editor = () => {
 
         {/* Right Column - Preview */}
         <div className="w-full lg:w-[65%] lg:flex-1 p-4 bg-gray-50 dark:bg-gray-900 overflow-y-auto">
-          <div className="sticky top-0 z-10 bg-gray-50 dark:bg-gray-900 pb-4 mb-4">
-            <div className="flex flex-wrap justify-between items-center gap-3">
-              <h2 className="text-xl font-bold dark:text-gray-200">Preview</h2>
-              <div className="flex items-center gap-2 flex-shrink-0">
-                <Button 
-                  onClick={handleSaveCV} 
-                  className="whitespace-nowrap px-3"
-                  size="sm"
-                >
-                  <Save className="h-4 w-4 mr-1.5" /> 
-                  Save CV
-                </Button>
-                <Button 
-                  onClick={handleDownloadPDF}
-                  className="whitespace-nowrap px-3"
-                  size="sm"
-                >
-                  <Download className="h-4 w-4 mr-1.5" /> 
-                  PDF
-                </Button>
-              </div>
+          <div className="sticky top-0 z-10 bg-gray-50 dark:bg-gray-900 pb-4 mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <h2 className="text-xl font-bold dark:text-gray-200">Preview</h2>
+            <div className="flex flex-row gap-2 w-full sm:w-auto">
+              <Button onClick={handleSaveCV} className="flex-1 sm:flex-initial justify-center text-sm sm:text-base px-3">
+                <Save className="h-4 w-4 mr-2" /> Save your CV
+              </Button>
+              <Button onClick={handleDownloadPDF} className="flex-1 sm:flex-initial justify-center text-sm sm:text-base px-3">
+                <Download className="h-4 w-4 mr-2" /> Download PDF
+              </Button>
             </div>
           </div>
           

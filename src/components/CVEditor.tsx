@@ -349,8 +349,8 @@ const CVEditor = ({ cvData, onUpdateCV }: CVEditorProps) => {
       </Dialog>
 
       <Tabs defaultValue="personal" className="w-full">
-        <div className="overflow-x-auto pb-2 -mb-2">
-          <TabsList className="grid w-full grid-flow-col auto-cols-[minmax(auto,_1fr)] md:grid-cols-5 gap-1">
+        <div className="overflow-x-auto scrollbar-hide pb-2 -mb-2">
+          <TabsList className="inline-flex w-max gap-2 px-2">
             <TabsTrigger value="personal">Personal</TabsTrigger>
             <TabsTrigger value="experience">Experience</TabsTrigger>
             <TabsTrigger value="education">Education</TabsTrigger>

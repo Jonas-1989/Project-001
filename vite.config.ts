@@ -25,6 +25,7 @@ export default defineConfig({
             'react',
             'react-dom',
             'react-router-dom',
+            'react-hook-form',
             'uuid',
             'html2canvas',
             'jspdf',
@@ -50,6 +51,7 @@ export default defineConfig({
   optimizeDeps: {
     include: [
       'uuid', 
+      'react-hook-form',
       'react-image-crop',
       '@radix-ui/react-avatar',
       '@radix-ui/react-dialog',

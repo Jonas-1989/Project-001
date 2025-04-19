@@ -4,7 +4,6 @@ import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/',
   plugins: [react()],
   resolve: {
     alias: {
@@ -19,7 +18,6 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: true,
-    assetsInlineLimit: 10240, // 10kb - increased limit for better image handling
     rollupOptions: {
       output: {
         manualChunks: {

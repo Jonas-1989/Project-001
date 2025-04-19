@@ -357,31 +357,31 @@ const CVEditor = ({ cvData, onUpdateCV }: CVEditorProps) => {
           <TabsList className="flex flex-wrap gap-1 bg-transparent mb-4">
             <TabsTrigger 
               value="personal" 
-              className="data-[state=active]:bg-black data-[state=active]:text-white rounded-md px-4 py-2 text-sm font-medium"
+              className="rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
             >
               Personal
             </TabsTrigger>
             <TabsTrigger 
               value="experience"
-              className="data-[state=active]:bg-black data-[state=active]:text-white rounded-md px-4 py-2 text-sm font-medium"
+              className="rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
             >
               Experience
             </TabsTrigger>
             <TabsTrigger 
               value="education"
-              className="data-[state=active]:bg-black data-[state=active]:text-white rounded-md px-4 py-2 text-sm font-medium"
+              className="rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
             >
               Education
             </TabsTrigger>
             <TabsTrigger 
               value="languages"
-              className="data-[state=active]:bg-black data-[state=active]:text-white rounded-md px-4 py-2 text-sm font-medium"
+              className="rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
             >
               Languages
             </TabsTrigger>
             <TabsTrigger 
               value="skills"
-              className="data-[state=active]:bg-black data-[state=active]:text-white rounded-md px-4 py-2 text-sm font-medium"
+              className="rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
             >
               Skills
             </TabsTrigger>

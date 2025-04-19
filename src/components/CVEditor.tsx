@@ -1,3 +1,4 @@
+// Test automatic deployment
 import { useState, useRef, ChangeEvent } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { CVData, Skill, Language } from "@/lib/types";
@@ -504,11 +505,6 @@ const CVEditor = ({ cvData, onUpdateCV }: CVEditorProps) => {
                           variant="outline"
                           size="sm"
                           className="h-8 px-3 text-xs"
-                          onClick={() => {
-                            const newPersonalInfo = { ...cvData.personalInfo };
-                            newPersonalInfo.gender = "male";
-                            onUpdateCV({ personalInfo: newPersonalInfo });
-                          }}
                         >
                           <PlusCircle className="h-3 w-3 mr-1" />
                           Sexe
@@ -519,11 +515,6 @@ const CVEditor = ({ cvData, onUpdateCV }: CVEditorProps) => {
                           variant="outline"
                           size="sm"
                           className="h-8 px-3 text-xs"
-                          onClick={() => {
-                            const newPersonalInfo = { ...cvData.personalInfo };
-                            newPersonalInfo.maritalStatus = "single";
-                            onUpdateCV({ personalInfo: newPersonalInfo });
-                          }}
                         >
                           <PlusCircle className="h-3 w-3 mr-1" />
                           État civil
@@ -534,11 +525,6 @@ const CVEditor = ({ cvData, onUpdateCV }: CVEditorProps) => {
                           variant="outline"
                           size="sm"
                           className="h-8 px-3 text-xs"
-                          onClick={() => {
-                            const newPersonalInfo = { ...cvData.personalInfo };
-                            newPersonalInfo.drivingLicense = "";
-                            onUpdateCV({ personalInfo: newPersonalInfo });
-                          }}
                         >
                           <PlusCircle className="h-3 w-3 mr-1" />
                           Permis de conduire
@@ -549,11 +535,6 @@ const CVEditor = ({ cvData, onUpdateCV }: CVEditorProps) => {
                           variant="outline"
                           size="sm"
                           className="h-8 px-3 text-xs"
-                          onClick={() => {
-                            const newPersonalInfo = { ...cvData.personalInfo };
-                            newPersonalInfo.linkedin = "";
-                            onUpdateCV({ personalInfo: newPersonalInfo });
-                          }}
                         >
                           <PlusCircle className="h-3 w-3 mr-1" />
                           LinkedIn
@@ -564,11 +545,6 @@ const CVEditor = ({ cvData, onUpdateCV }: CVEditorProps) => {
                           variant="outline"
                           size="sm"
                           className="h-8 px-3 text-xs"
-                          onClick={() => {
-                            const newPersonalInfo = { ...cvData.personalInfo };
-                            newPersonalInfo.customField = "";
-                            onUpdateCV({ personalInfo: newPersonalInfo });
-                          }}
                         >
                           <PlusCircle className="h-3 w-3 mr-1" />
                           Champ personnalisé
